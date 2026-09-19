@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaCheno | Gastronomía & Hospedaje</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0b0c10;
+      color: #ffffff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fondo elegante con Difuminado (Blur) */
+    .bg-blur {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px) brightness(0.3);
+      transform: scale(1.05);
+      z-index: -1;
+    }
+
+    /* Barra Superior de Contacto */
+    .top-bar {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #d1d5db;
+    }
+
+    .top-info span {
+      margin-right: 20px;
+      display: inline-block;
+    }
+
+    .top-brand {
+      color: #ff4757;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* Navbar Principal */
+    .navbar {
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(15px);
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+
+    .logo span {
+      color: #ff4757;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: #ff4757;
+      border-color: #ff4757;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    /* Contenedor Principal */
+    .container {
+      padding: 30px 20px 100px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Compartimentos */
+    .compartimento {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .compartimento.activo {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Presentación de Inicio */
+    .hero-presentacion {
+      background: rgba(20, 20, 28, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px 25px;
+      text-align: center;
+      margin-bottom: 35px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 71, 87, 0.2);
+      color: #ff4757;
+      border: 1px solid rgba(255, 71, 87, 0.4);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .hero-presentacion h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .hero-presentacion p {
+      color: #c7c7d0;
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #ffa502;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    /* Grilla de Selección Principal */
+    .categorias-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .category-card {
+      background: rgba(25, 25, 35, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      border-color: #ff4757;
+      box-shadow: 0 10px 25px rgba(255, 71, 87, 0.25);
+    }
+
+    .cat-img {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .cat-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #ff4757;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .cat-info {
+      padding: 20px;
+    }
+
+    .cat-info h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .cat-info p {
+      color: #a0a0ab;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .btn-link {
+      color: #ff4757;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Banner Interno de Categoría */
+    .menu-hero-banner {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sub-label {
+      color: #ffa502;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .menu-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .btn-back {
+      background: rgba(255,255,255,0.08);
+      color: #ff4757;
+      border: 1px solid #ff4757;
+      padding: 10px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 25px;
+      transition: 0.3s;
+    }
+
+    .btn-back:hover {
+      background: #ff4757;
+      color: #fff;
+    }
+
+    /* Grilla de Tarjetas de Menú */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(20, 20, 28, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 22px;
+      position: relative;
+    }
+
+    .card .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 71, 87, 0.2);
+      color: #ff4757;
+      border: 1px solid rgba(255, 71, 87, 0.4);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      padding-right: 60px;
+    }
+
+    .card .desc {
+      color: #a0a0ab;
+      font-size: 0.88rem;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .precio {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffa502;
+    }
+
+    /* Botón Flotante de WhatsApp */
+    .wsp-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25d366;
+      color: #ffffff;
+      padding: 14px 22px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+
+    .wsp-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .top-bar {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+      }
+      .nav-links {
+        gap: 5px;
+      }
+      .nav-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+      }
+      .hero-presentacion h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Imagen de Fondo Oscura con Difuminado -->
+  <div class="bg-blur"></div>
+
+  <!-- Barra Superior de Contacto -->
+  <div class="top-bar">
+    <div class="top-info">
+      <span>📍 Cl. Sánchez Carrión #122</span>
+      <span>📞 949405112</span>
+    </div>
+    <div class="top-brand">
+      <span>LaCheno</span>
+    </div>
+  </div>
+
+  <!-- Header / Navegación Principal -->
+  <header class="navbar">
+    <div class="logo" onclick="mostrarSeccion('inicio')">LA<span>CHENO</span></div>
+    <nav class="nav-links">
+      <button class="nav-btn active" id="btn-inicio" onclick="mostrarSeccion('inicio')">INICIO</button>
+      <button class="nav-btn" id="btn-comidas" onclick="mostrarSeccion('comidas')">MENÚS</button>
+      <button class="nav-btn" id="btn-bebidas" onclick="mostrarSeccion('bebidas')">BEBIDAS</button>
+      <button class="nav-btn" id="btn-habitaciones" onclick="mostrarSeccion('habitaciones')">HABITACIONES</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    
+    <!-- PANTALLA DE INICIO (PRESENTACIÓN & SELECCIÓN) -->
+    <section id="seccion-inicio" class="compartimento activo">
+      
+      <!-- Presentación de Bienvenida -->
+      <div class="hero-presentacion">
+        <span class="hero-badge">🔥 Bienvenidos a LaCheno</span>
+        <h1>El Buen Sabor & el Mejor Descanso</h1>
+        <p>Te ofrecemos los mejores platos criollos de la ciudad, bebidas heladitas y habitaciones totalmente confortables para tu estadía en Jaén.</p>
+      </div>
+
+      <h2 class="section-title">¿Qué deseas consultar hoy?</h2>
+      <p class="subtitle">Haz clic en una opción para entrar directamente al compartimento</p>
+
+      <!-- Grilla de Accesos a los Compartimentos -->
+      <div class="categorias-grid">
+        
+        <div class="category-card" onclick="mostrarSeccion('comidas')">
+          <div class="cat-img" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80');">
+            <span class="cat-badge">🍲 Sabor Criollo</span>
+          </div>
+          <div class="cat-info">
+            <h3>Platos & Menús</h3>
+            <p>Menús del día, espesado, mondonguito, pescado fresco y preparaciones caseras.</p>
+            <span class="btn-link">Ver Platos y Precios &rarr;</span>
+          </div>
+        </div>
+
+        <div class="category-card" onclick="mostrarSeccion('bebidas')">
+          <div class="cat-img" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80');">
+            <span class="cat-badge">🍹 HELADITAS</span>
+          </div>
+          <div class="cat-info">
+            <h3>Bebidas & Refrescos</h3>
+            <p>Chicha morada natural, refresco de maracuyá, gaseosas y cervezas bien frías.</p>
+            <span class="btn-link">Ver Bebidas &rarr;</span>
+          </div>
+        </div>
+
+        <div class="category-card" onclick="mostrarSeccion('habitaciones')">
+          <div class="cat-img" style="background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80');">
+            <span class="cat-badge">🛏️ Descanso</span>
+          </div>
+          <div class="cat-info">
+            <h3>Habitaciones</h3>
+            <p>Alquiler de habitaciones amobladas por día o por mes con total comodidad.</p>
+            <span class="btn-link">Ver Habitaciones &rarr;</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMPARTIMENTO: MENÚ DE COMIDAS -->
+    <section id="seccion-comidas" class="compartimento">
+      <div class="menu-hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80');">
+        <span class="sub-label">— SABOR CRIOLLO CASERO —</span>
+        <h1 class="menu-title">NUESTRO MENÚ</h1>
+      </div>
+
+      <button class="btn-back" onclick="mostrarSeccion('inicio')">&larr; Volver a Inicio</button>
+
+      <div class="grid">
+        <div class="card">
+          <div class="badge">Menú del Día</div>
+          <h3>Pollo Mechado</h3>
+          <p class="desc">Servido con su arroz bien graneado, papitas y sarza criolla.</p>
+          <span class="precio">S/ 8.00</span>
+        </div>
+
+        <div class="card">
+          <div class="badge">Menú del Día</div>
+          <h3>Carne Guisada</h3>
+          <p class="desc">Carne suavecita en aderezo criollo con guarnición a elección.</p>
+          <span class="precio">S/ 9.00</span>
+        </div>
+
+        <div class="card">
+          <div class="badge">Especialidad</div>
+          <h3>Mondonguito Peruano</h3>
+          <p class="desc">Clásico mondonguito a la italiana con papas fritas y verduras.</p>
+          <span class="precio">S/ 10.00</span>
+        </div>
+
+        <div class="card">
+          <div class="badge">Especialidad</div>
+          <h3>Cachema Frita / Sudada</h3>
+          <p class="desc">Fresca, doradita al punto con su yuca y sarza criolla.</p>
+          <span class="precio">S/ 10.00</span>
+        </div>
+
+        <div class="card">
+          <div class="badge">Tradicional</div>
+          <h3>Espesado de Pollo</h3>
+          <p class="desc">Tradicional espesado de choclo verde con presa de pollo jugosa.</p>
+          <span class="precio">S/ 10.00</span>
+        </div>
+
+        <div class="card">
+          <div class="badge">Tradicional</div>
+          <h3>Patita de Chancho</h3>
+          <p class="desc">Guisado criollo con maní y ají panca, puro sabor casero.</p>
+          <span class="precio">S/ 9.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPARTIMENTO: BEBIDAS -->
+    <section id="seccion-bebidas" class="compartimento">
+      <div class="menu-hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=1200&q=80');">
+        <span class="sub-label">— REFRESCANTES & HELADAS —</span>
+        <h1 class="menu-title">BEBIDAS</h1>
+      </div>
+
+      <button class="btn-back" onclick="mostrarSeccion('inicio')">&larr; Volver a Inicio</button>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Chicha Morada (Jarra)</h3>
+          <p class="desc">Preparada con maíz morado, piña, canela y clavo de olor.</p>
+          <span class="precio">S/ 6.00</span>
+        </div>
+        <div class="card">
+          <h3>Refresco de Maracuyá (Jarra)</h3>
+          <p class="desc">100% fruta natural bien heladita.</p>
+          <span class="precio">S/ 5.00</span>
+        </div>
+        <div class="card">
+          <h3>Vaso de Refresco</h3>
+          <p class="desc">Chicha o Maracuyá heladita al momento.</p>
+          <span class="precio">S/ 1.50</span>
+        </div>
+        <div class="card">
+          <div class="badge">Heladita</div>
+          <h3>Cerveza Personal / Grande</h3>
+          <p class="desc">Variedad de marcas servidas al polo.</p>
+          <span class="precio">S/ 10.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPARTIMENTO: HABITACIONES -->
+    <section id="seccion-habitaciones" class="compartimento">
+      <div class="menu-hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80');">
+        <span class="sub-label">— CONFORT & TRANQUILIDAD —</span>
+        <h1 class="menu-title">HABITACIONES</h1>
+      </div>
+
+      <button class="btn-back" onclick="mostrarSeccion('inicio')">&larr; Volver a Inicio</button>
+
+      <div class="grid">
+        <div class="card">
+          <div class="badge">Estadía Corta</div>
+          <h3>Habitación por Día</h3>
+          <p class="desc">Cama confortable, baño privado, ventilador, Wi-Fi y ambiente seguro.</p>
+          <span class="precio">S/ 25.00 / día</span>
+        </div>
+        <div class="card">
+          <div class="badge">Estadía Larga</div>
+          <h3>Habitación por Mes</h3>
+          <p class="desc">Alojamiento mensual amoblado, ambiente privado, tranquilo e ideal para ejecutivos o residentes.</p>
+          <span class="precio">S/ Consultar precio</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Botón Flotante de WhatsApp Directo -->
+  <a href="https://wa.me/51949405112?text=Hola%20LaCheno,%20quisiera%20consultar%20sobre%20sus%20servicios" class="wsp-btn" target="_blank">
+    💬 WhatsApp: 949405112
+  </a>
+
+  <!-- Script Lógico para Cambiar de Compartimento -->
+  <script>
+    function mostrarSeccion(nombreSeccion) {
+      const compartimentos = document.querySelectorAll('.compartimento');
+      compartimentos.forEach(comp => comp.classList.remove('activo'));
+
+      const botones = document.querySelectorAll('.nav-btn');
+      botones.forEach(btn => btn.classList.remove('active'));
+
+      const seccionObjetivo = document.getElementById(`seccion-${nombreSeccion}`);
+      if (seccionObjetivo) {
+        seccionObjetivo.classList.add('activo');
+      }
+
+      const btnObjetivo = document.getElementById(`btn-${nombreSeccion}`);
+      if (btnObjetivo) {
+        btnObjetivo.classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
